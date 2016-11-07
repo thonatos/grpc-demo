@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.mt.impl";
+option java_outer_classname = "ImplProto";
+option objc_class_prefix = "HLW";
+
+package impl;
+
+// simple rpc
+service LBS {    
+  rpc locate(Point) returns (Place) {}
+  rpc list(Size) returns (stream Point) {}
+  rpc query(stream Point) returns (stream Place) {}
+}
+
+message Point {
+  int32 latitude = 1;
+  int32 longitude = 2;
+}
+
+message Place {
+  Point location = 1;
+  string name = 2;
+}
+
+message Size{
+  int32 size = 1;
+}
