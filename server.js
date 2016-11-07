@@ -1,9 +1,9 @@
-var PROTO_PATH = './impl.proto'
-
 var grpc = require('grpc')
-var impl_proto = grpc.load(PROTO_PATH).impl
 
+var PROTO_PATH = './impl.proto'
+var conf = require('./conf')
 var place_list = require('./db')
+var impl_proto = grpc.load(PROTO_PATH).impl
 
 // Simple RPC
 function locate(call, callback) {
@@ -14,7 +14,6 @@ function locate(call, callback) {
         }
     }
 }
-
 
 // A server-side streaming RPC
 function list(call) {
@@ -28,7 +27,6 @@ function list(call) {
 function query(call) {
     call.on('data', function(point) {
         console.log(point)
-
         for (var index in place_list) {
             if (place_list[index].location.latitude === point.latitude && place_list[index].location.longitude === point.longitude) {
                 call.write(place_list[index])
@@ -36,7 +34,6 @@ function query(call) {
             }
         }
     })
-
     call.on('end', function() {
         call.end()
     })
@@ -48,5 +45,5 @@ server.addProtoService(impl_proto.LBS.service, {
     query: query,
     list: list
 })
-server.bind('0.0.0.0:50054', grpc.ServerCredentials.createInsecure())
+server.bind(conf.ip.server + ':' + conf.port, grpc.ServerCredentials.createInsecure())
 server.start()

@@ -7,10 +7,14 @@ option objc_class_prefix = "HLW";
 
 package impl;
 
-// simple rpc
 service LBS {    
+  // Simple RPC
   rpc locate(Point) returns (Place) {}
+
+  // A server-side streaming RPC
   rpc list(Size) returns (stream Point) {}
+
+  // A bidirectional streaming RPC
   rpc query(stream Point) returns (stream Place) {}
 }
 
